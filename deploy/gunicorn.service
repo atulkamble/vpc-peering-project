@@ -1,0 +1,18 @@
+[Unit]
+Description=Gunicorn for VPC Peering Flask app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/opt/vpc-peering-project
+EnvironmentFile=/etc/vpc-peering-project/app.env
+ExecStart=/opt/vpc-peering-project/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
